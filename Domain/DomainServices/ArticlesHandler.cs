@@ -87,7 +87,7 @@ namespace Domain.DomainServices
             article.UserId = userId;
             await _uow.Articles.CreateArticleAsync(article);
             await _uow.CommitAsync();
-            return article.UserId;
+            return article.ArticleId;
         }
 
         public async Task DeleteArticleAsync(int id) {

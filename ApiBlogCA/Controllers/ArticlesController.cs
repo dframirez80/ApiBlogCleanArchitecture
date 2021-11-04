@@ -102,7 +102,7 @@ namespace ApiBlogCA.Controllers
                 return BadRequest();
             int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
             if ((await handlerUsers.GetUserExistsAsync(userId)) != null) {
-                var articleId = handler.CreateArticleAsync(articleDto, userId);
+                var articleId = await handler.CreateArticleAsync(articleDto, userId);
                 return Created("GetArticle", new { id = articleId });
             }
             return NotFound();

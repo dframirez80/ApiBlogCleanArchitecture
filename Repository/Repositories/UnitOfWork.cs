@@ -16,6 +16,7 @@ namespace Repository.Repositories
 
         public UnitOfWork(AppDbContext dbContext) {
             _context = dbContext;
+            Comments = new CommentRepository(_context);
             Articles = new ArticleRepository(_context);
             Users = new UserRepository(_context);
         }

@@ -1,5 +1,0 @@
-{
-  "ConnectionStrings": {
-    "ApiBlogCADB": "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ApiBlogCADB;Integrated Security=True;Connect Timeout=30;"
-  }
-}
