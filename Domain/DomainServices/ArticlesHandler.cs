@@ -41,7 +41,6 @@ namespace Domain.DomainServices
             };
             return pagingResponse;
         }
-
         public async Task<IEnumerable<Article>> GetArticlesByKeywordAsync(string keyword) {
             var articles = await _uow.Articles.GetArticlesByKeywordAsync(keyword);
             return articles;
@@ -52,7 +51,6 @@ namespace Domain.DomainServices
         public async Task<Article> GetArticleAsync(int id) {
             return await _uow.Articles.GetArticleAsync(id);
         }
-
         public async Task<Reactions> GetReactionsAsync(int id) {
             var article = await _uow.Articles.GetArticleAsync(id);
             if (article == null)
@@ -65,7 +63,6 @@ namespace Domain.DomainServices
             };
             return reactions;
         }
-
         public async Task UpdateArticleAsync(Article article) {
             await _uow.Articles.UpdateArticleAsync(article);
             await _uow.CommitAsync();
@@ -80,7 +77,6 @@ namespace Domain.DomainServices
                 article.Dislikes++;
             await _uow.CommitAsync();
         }
-
         public async Task<int> CreateArticleAsync(ArticleDto articleDto, int userId) {
             var article = _mapper.Map<Article>(articleDto);
             article.Created = DateTime.UtcNow.AddHours(UTC.GmtBuenosAires);
@@ -89,7 +85,6 @@ namespace Domain.DomainServices
             await _uow.CommitAsync();
             return article.ArticleId;
         }
-
         public async Task DeleteArticleAsync(int id) {
             await _uow.Articles.DeleteArticleAsync(id);
             await _uow.CommitAsync();

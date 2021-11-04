@@ -18,15 +18,14 @@ namespace Mail
         }
 
         public async Task EmailChangePassword(EmailRequest emailRequest) {
-            emailRequest.Body = $"<p style='text-align: center; width: 250px; height: 50px; padding: 5px; border-radius: 20%;color: white;background: blue;text-decoration: none;'>" +
-                $" Su nueva contraseña es : <strong>{emailRequest.Body}</strong></p> ";
+            string aux = Domain.Constants.Email.SendNewPassword;
+            emailRequest.Body = aux.Replace("{MI_TEXTO}", emailRequest.Body);
             await SendEmailAsync(emailRequest);
         }
 
         public async Task EmailConfirmRegister(EmailRequest emailRequest) {
-            emailRequest.Body = $"<a href='{emailRequest.Body}' target='_blank' " +
-                $"style='width: 250px; height: 120px; padding: 5px; border-radius: 20%;color: white;background: blue;text-decoration: none;'" +
-                $"> Confirmar Registro </a>";
+            string aux = Domain.Constants.Email.ConfirmRegister;
+            emailRequest.Body = aux.Replace("{MI_TEXTO}", emailRequest.Body);
             await SendEmailAsync(emailRequest);
         }
 

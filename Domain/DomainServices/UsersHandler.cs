@@ -40,7 +40,6 @@ namespace Domain.DomainServices
                 return await _uow.Users.GetUserAsync(id);
             return null;
         }
-
         public async Task DeleteUserAsync(int id) {
             var exists = await _uow.Users.UserExistsAsync(id);
             if (exists) { 
@@ -142,7 +141,6 @@ namespace Domain.DomainServices
             }
             return ErrorMessage.EmailOrPassword;
         }
-
         public async Task<string> ResetUserPasswordAsync(ResetPassword email, string host) {
             var user = await _uow.Users.UserExistsAsync(email.Email);                              // verifica password y correo
             if (user == null)
@@ -159,7 +157,6 @@ namespace Domain.DomainServices
             await _emailService.EmailChangePassword(emailRequest);
             return Domain.Constants.Email.NewPassword;
         }
-
         public async Task<string> RegisterAdminAsync(UserDto userDto) {
             var userExists = await _uow.Users.UserExistsAsync(userDto.Email);   //verifica si existe email
             if (userExists != null)
@@ -173,7 +170,6 @@ namespace Domain.DomainServices
             await _uow.CommitAsync();
             return user.UserId.ToString();
         }
-
         public async Task<string> LoginUserAsync(Login login) {
             var user = await _uow.Users.UserExistsAsync(login.Email);                              // verifica password y correo
             if (user == null)
