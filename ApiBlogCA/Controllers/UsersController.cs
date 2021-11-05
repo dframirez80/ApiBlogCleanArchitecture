@@ -16,9 +16,6 @@ namespace ApiBlogCA.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public UsersController() {
-        }
-
         // GET: api/v1/Users    
         [HttpGet]
         [Authorize(Roles = Roles.Admin)]
@@ -96,14 +93,16 @@ namespace ApiBlogCA.Controllers
         [HttpPost("register")]
         [AllowAnonymous]
         public async Task<ActionResult> PostUser([FromServices] UsersHandler handler, UserDto userDto) {
+            if (userDto == null)       
+                return NotFound(); 
             var host = HttpContext.Request.Host.ToString(); 
             string response = await handler.RegisterUserAsync(userDto, host);
             if (response == string.Empty)
                 return BadRequest();
             if (response == ErrorMessage.UserExists)       // verifica si usuario esta activo
-                return NotFound(response);
+                return ValidationProblem(response);
             if (response == ErrorMessage.UserBlocked)       // verifica si usuario esta bloqueado
-                return NotFound(response);
+                return ValidationProblem(response);
 
             return Created("GetUser", new { message = response });
         }
@@ -116,7 +115,7 @@ namespace ApiBlogCA.Controllers
                 return BadRequest();
             var response = await handler.ChangeUserPasswordAsync(changePassword);
             if(response == ErrorMessage.EmailOrPassword)
-                return NotFound(response);
+                return ValidationProblem(response);
             return Ok(new { message = response });
         }
 
@@ -129,7 +128,7 @@ namespace ApiBlogCA.Controllers
             var host = HttpContext.Request.Host.ToString();
             var response = await handler.ResetUserPasswordAsync(resetPassword, host);
             if (response == ErrorMessage.UserNotLogin)
-                return NotFound(response);
+                return ValidationProblem(response);
             return Ok(new { message = response });
         }
 
@@ -141,7 +140,7 @@ namespace ApiBlogCA.Controllers
                 return BadRequest();
             var response = await handler.RegisterAdminAsync(userDto);
             if (response == ErrorMessage.UserExists)
-                return NotFound(response);
+                return ValidationProblem(response);
             return Created("GetUser", new { id = response });
         }
 
@@ -153,7 +152,7 @@ namespace ApiBlogCA.Controllers
                 return BadRequest();
             var response = await handler.LoginUserAsync(login);
             if (response == ErrorMessage.UserNotLogin || response == ErrorMessage.UserBlocked || response == ErrorMessage.ResetPassword || response == ErrorMessage.UserPending)
-                return NotFound(response);
+                return ValidationProblem(response);
             return Ok(new { token = response });
         }
 
@@ -161,7 +160,7 @@ namespace ApiBlogCA.Controllers
         [HttpGet]
         [Route("authenticated")]
         [Authorize]
-        public string Authenticated() => String.Format("Authenticated - {0}, {1}", User.Identity.Name, User.IsInRole(Roles.Admin));
+        public string Authenticated() => String.Format("Authenticated - {0}, Admin:{1}", User.Identity.Name, User.IsInRole(Roles.Admin));
 
         [HttpGet]
         [Route("testUser")]

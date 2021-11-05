@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.DomainServices;
+using Domain.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,13 +22,6 @@ namespace ApiBlogCA.Controllers
     [Authorize(Roles = Roles.AdminOrUser)]
     public class CommentsController : ControllerBase
     {
-        private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
-        public CommentsController(IUnitOfWork uow, IMapper mapper) {
-            _uow = uow;
-            _mapper = mapper;
-        }
-
         // GET: api/v1/Comments
         [HttpGet]
         public async Task<IEnumerable<CommentDto>> GetAsync([FromServices] CommentsHandler handler, CommentDto commentDto) {
@@ -55,7 +49,9 @@ namespace ApiBlogCA.Controllers
         public async Task<ActionResult> PostAsync([FromServices] CommentsHandler handler, CommentDto commentDto) {
             if (commentDto == null)
                 BadRequest();
-            var userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
+            int userId = Authorization.GetTokenId(User);
+            if (userId == 0)
+                Unauthorized();
             var commentId = await handler.CreateCommentAsync(commentDto, userId);
 
             return Created("GetComment", new { id = commentId });
@@ -77,9 +73,10 @@ namespace ApiBlogCA.Controllers
             if (commentDto  == null)
                 return BadRequest();
             var comment = await handler.GetCommentAsync(id);
-            int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
-            if (comment.UserId == userId || User.IsInRole(Roles.Admin))
-            {
+            int userId = Authorization.GetTokenId(User);
+            if (userId == 0)
+                Unauthorized();
+            if (comment.UserId == userId || User.IsInRole(Roles.Admin)){
                 comment.Content = commentDto.Content;
                 await handler.UpdateCommentAsync(comment);
                 return NoContent();
@@ -93,9 +90,10 @@ namespace ApiBlogCA.Controllers
             var comment = await handler.GetCommentAsync(id);
             if (comment == null)
                 return NotFound();
-            int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
-            if (userId == comment.UserId || User.IsInRole(Roles.Admin))
-            {
+            int userId = Authorization.GetTokenId(User);
+            if (userId == 0)
+                Unauthorized();
+            if (userId == comment.UserId || User.IsInRole(Roles.Admin)){
                 await handler.DeleteCommentAsync(id);
                 return NoContent();
             }

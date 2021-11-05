@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiBlogCA.Startups;
 
 namespace ApiBlogCA
 {
@@ -31,7 +32,8 @@ namespace ApiBlogCA
                 .AddAppDomain()
                 .AddAppRepository(Configuration)
                 .AddAppMailService(Configuration)
-                .AddAppSecurity(Configuration);
+                .AddAppSecurity(Configuration)
+                .AddAppSwagger();
             services.AddControllers();
         }
 
@@ -41,7 +43,7 @@ namespace ApiBlogCA
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseSwaggerAppMiddleware();
             app.UseHttpsRedirection();
 
             app.UseRouting();

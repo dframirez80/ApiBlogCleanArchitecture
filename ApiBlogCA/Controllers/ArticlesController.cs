@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.DomainServices;
+using System.Security.Claims;
+using Domain.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,9 +24,6 @@ namespace ApiBlogCA.Controllers
     [Authorize(Roles = Roles.AdminOrUser)]
     public class ArticlesController : ControllerBase
     {
-        public ArticlesController() {
-        }
-
         // GET: api/v1/Articles/paging/?page=1&quantity=10
         [HttpGet("paging")]
         [AllowAnonymous]
@@ -39,7 +38,8 @@ namespace ApiBlogCA.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<IEnumerable<Article>>> GetArticlesByKeyword([FromServices] ArticlesHandler handler, string keyword) {
             var articles = await handler.GetArticlesByKeywordAsync(keyword);
-            if (articles == null) return NotFound();
+            if (articles == null) 
+                return NotFound();
             return Ok(articles);
         }
         
@@ -76,7 +76,9 @@ namespace ApiBlogCA.Controllers
             if (id != article.ArticleId)
                 return BadRequest();
             var art = await handler.GetArticleAsync(id);
-            int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
+            int userId = Authorization.GetTokenId(User);
+            if (userId == 0)
+                Unauthorized();
             if (userId == art.UserId || User.IsInRole(Roles.Admin)) { 
                 await handler.UpdateArticleAsync(article);
                 return NoContent();
@@ -100,7 +102,9 @@ namespace ApiBlogCA.Controllers
         public async Task<ActionResult> PostArticle([FromServices] ArticlesHandler handler, [FromServices] UsersHandler handlerUsers, ArticleDto articleDto) {
             if (articleDto == null) 
                 return BadRequest();
-            int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
+            int userId = Authorization.GetTokenId(User);
+            if (userId==0)
+                Unauthorized();
             if ((await handlerUsers.GetUserExistsAsync(userId)) != null) {
                 var articleId = await handler.CreateArticleAsync(articleDto, userId);
                 return Created("GetArticle", new { id = articleId });
@@ -114,7 +118,9 @@ namespace ApiBlogCA.Controllers
             var article = await handler.GetArticleAsync(id);
             if (article == null)
                 return NotFound();
-            int userId = Convert.ToInt32(User.Claims.First(s => s.Type == "id").Value);
+            int userId = Authorization.GetTokenId(User);
+            if (userId == 0)
+                Unauthorized();
             if (userId == article.UserId || User.IsInRole(Roles.Admin))
             {
                 await handler.DeleteArticleAsync(id);
@@ -122,5 +128,6 @@ namespace ApiBlogCA.Controllers
             }
             return NotFound();
         }
+
     }
 }

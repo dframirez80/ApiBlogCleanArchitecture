@@ -121,7 +121,7 @@ namespace Domain.DomainServices
             await _uow.CommitAsync();
 
             // envio de correo
-            var token = _tokenJwt.GenerateToken(user, TokenExpires.Register);
+            var token = _tokenJwt.GenerateToken(user, TokenItems.Register);
             string path = $"https://{host}/api/v1/users/confirm/{user.UserId}/{token}";
             EmailRequest emailRequest = new() { ToEmail = user.Email, Subject = Domain.Constants.Email.Subject, Body = path };
             await _emailService.EmailConfirmRegister(emailRequest);
@@ -152,7 +152,7 @@ namespace Domain.DomainServices
             user.ResetPassword = true;
             await _uow.CommitAsync();
 
-            var token = _tokenJwt.GenerateToken(user, TokenExpires.Register);
+            var token = _tokenJwt.GenerateToken(user, TokenItems.Register);
             EmailRequest emailRequest = new() { ToEmail = user.Email, Subject = Domain.Constants.Email.Subject, Body = newPass.ToString() };
             await _emailService.EmailChangePassword(emailRequest);
             return Domain.Constants.Email.NewPassword;
@@ -179,7 +179,7 @@ namespace Domain.DomainServices
             if (user.StatusUser == (int)Enumerations.StatusUser.Active)
             {
                 if (!user.ResetPassword){
-                    var tokenUser = _tokenJwt.GenerateToken(user, TokenExpires.Login);          // generar token
+                    var tokenUser = _tokenJwt.GenerateToken(user, TokenItems.Login);          // generar token
                     return tokenUser;
                 } 
                 return ErrorMessage.ResetPassword;

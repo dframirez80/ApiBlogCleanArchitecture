@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Constants;
+using Domain.Models;
 using Domain.Repository.Entities;
 using Domain.Security;
 using Microsoft.Extensions.Options;
@@ -27,7 +28,7 @@ namespace Security
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim("id", user.UserId.ToString()),
+                    new Claim(TokenItems.Id, user.UserId.ToString()),
                     new Claim(ClaimTypes.Name, user.Names),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Role, user.Role)

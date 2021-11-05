@@ -5,9 +5,10 @@ using System.Threading.Tasks;
 
 namespace Domain.Constants
 {
-    public class TokenExpires
+    public class TokenItems
     {
         public const int Register = 10;
         public const int Login = 60;
+        public const string Id = "id";
     }
 }
