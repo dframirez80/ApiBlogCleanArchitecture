@@ -1,4 +1,5 @@
-﻿using Domain.Repository.Entities;
+﻿using Domain.Constants;
+using Domain.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -13,7 +14,7 @@ namespace Repository.Repositories.EntityConfigurations
         public void Configure(EntityTypeBuilder<Comment> builder) {
  
             builder.HasKey(c => c.CommentId);
-            builder.Property(c => c.Content).IsRequired();
+            builder.Property(c => c.Content).IsRequired().HasMaxLength(Constraints.MaxLengthContent);
             builder.Property(c => c.ArticleId).IsRequired();
 
             builder.HasOne(c => c.User).WithMany(u => u.Comments).HasForeignKey(a => a.UserId).OnDelete(DeleteBehavior.Restrict);

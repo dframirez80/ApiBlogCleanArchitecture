@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.DomainServices;
 using System.Security.Claims;
-using Domain.Helpers;
+using ApiBlogCA.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
