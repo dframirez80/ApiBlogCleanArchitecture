@@ -58,7 +58,7 @@ namespace Domain.DomainServices
         public async Task<User> UpdateUserBlockedAsync(int id) {
             var user = await _uow.Users.GetUserAsync(id);
             if (user != null) { 
-                user.StatusUser = (int)Enumerations.StatusUser.Blocked;
+                user.StatusUser = (int)Numerical.StatusUser.Blocked;
                 await _uow.CommitAsync();
             }
             return user;
@@ -67,7 +67,7 @@ namespace Domain.DomainServices
             var user = await _uow.Users.GetUserAsync(id);
             if (user != null)
             {
-                user.StatusUser = (int)Enumerations.StatusUser.Pending;
+                user.StatusUser = (int)Numerical.StatusUser.Pending;
                 await _uow.CommitAsync();
             }
             return user;
@@ -76,7 +76,7 @@ namespace Domain.DomainServices
             var user = await _uow.Users.GetUserAsync(id);
             if (user != null)
             {
-                user.StatusUser = (int)Enumerations.StatusUser.Active;
+                user.StatusUser = (int)Numerical.StatusUser.Active;
                 await _uow.CommitAsync();
             }
             return user;
@@ -88,7 +88,7 @@ namespace Domain.DomainServices
             var user = await _uow.Users.GetUserAsync(id);
             if (user == null)
                 return Domain.Constants.Email.ConfirmFail;
-            user.StatusUser = (int)Enumerations.StatusUser.Active;
+            user.StatusUser = (int)Numerical.StatusUser.Active;
             await _uow.CommitAsync();
             return Domain.Constants.Email.Confirm;
         }
@@ -98,9 +98,9 @@ namespace Domain.DomainServices
             var user = await _uow.Users.UserExistsAsync(userDto.Email);              // verifica si existe usuario x email
             if (user != null)
             {
-                if (user.StatusUser == (int)Enumerations.StatusUser.Active)       // verifica si usuario esta activo
+                if (user.StatusUser == (int)Numerical.StatusUser.Active)       // verifica si usuario esta activo
                     return ErrorMessage.UserExists;
-                if (user.StatusUser == (int)Enumerations.StatusUser.Blocked)       // verifica si usuario esta bloqueado
+                if (user.StatusUser == (int)Numerical.StatusUser.Blocked)       // verifica si usuario esta bloqueado
                     return ErrorMessage.UserBlocked;
             }
 
@@ -114,7 +114,7 @@ namespace Domain.DomainServices
             {
                 user = _mapper.Map<User>(userDto);
                 user.Role = Roles.User;
-                user.StatusUser = (int)Enumerations.StatusUser.Pending;
+                user.StatusUser = (int)Numerical.StatusUser.Pending;
                 user.Created = DateTime.UtcNow.AddHours(UTC.GmtBuenosAires);
                 await _uow.Users.CreateUserAsync(user);                              // crea usuario con estado pendiente
             }
@@ -164,7 +164,7 @@ namespace Domain.DomainServices
             userDto.Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password);    // cifrar contraseña
             var user = _mapper.Map<User>(userDto);
             user.Role = Roles.Admin;
-            user.StatusUser = (int)Enumerations.StatusUser.Active;
+            user.StatusUser = (int)Numerical.StatusUser.Active;
             user.Created = DateTime.UtcNow.AddHours(UTC.GmtBuenosAires);
             await _uow.Users.CreateUserAsync(user);
             await _uow.CommitAsync();
@@ -176,7 +176,7 @@ namespace Domain.DomainServices
                 return ErrorMessage.UserNotLogin;
             if (!BCrypt.Net.BCrypt.Verify(login.Password, user.Password))
                 return ErrorMessage.UserNotLogin;
-            if (user.StatusUser == (int)Enumerations.StatusUser.Active)
+            if (user.StatusUser == (int)Numerical.StatusUser.Active)
             {
                 if (!user.ResetPassword){
                     var tokenUser = _tokenJwt.GenerateToken(user, TokenItems.Login);          // generar token
@@ -184,7 +184,7 @@ namespace Domain.DomainServices
                 } 
                 return ErrorMessage.ResetPassword;
             }
-            if (user.StatusUser == (int)Enumerations.StatusUser.Pending)
+            if (user.StatusUser == (int)Numerical.StatusUser.Pending)
                 return ErrorMessage.UserPending;
             else
                 return ErrorMessage.UserBlocked;

@@ -3,19 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBlogCA", "ApiBlogCA\ApiBlogCA.csproj", "{F20BF611-1F21-49AB-8CA0-3CF4FD6A831D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiBlogCA", "ApiBlogCA\ApiBlogCA.csproj", "{F20BF611-1F21-49AB-8CA0-3CF4FD6A831D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApplicationCore", "ApplicationCore", "{3A0E7B97-A833-4670-BE54-37F57AD0FE4C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infraestructure", "Infraestructure", "{956D266D-D961-40C1-B574-8A41BD607992}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{B7A20A6A-6DB8-4E0E-97DF-708646D38945}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{B7A20A6A-6DB8-4E0E-97DF-708646D38945}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{D39B8E61-081A-4576-BFEA-F26F43D66B22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{D39B8E61-081A-4576-BFEA-F26F43D66B22}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Email", "Email\Email.csproj", "{6458D771-1A44-4789-A89D-2B0EE52FDD08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Email", "Email\Email.csproj", "{6458D771-1A44-4789-A89D-2B0EE52FDD08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security", "Security\Security.csproj", "{8BEAA264-0658-412B-BB8F-2B92BED40A45}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Security", "Security\Security.csproj", "{8BEAA264-0658-412B-BB8F-2B92BED40A45}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiBlogCA.Test", "ApiBlogCA.Test\ApiBlogCA.Test.csproj", "{983B2549-1DF8-4668-A18C-A9DE218263A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +45,10 @@ Global
 		{8BEAA264-0658-412B-BB8F-2B92BED40A45}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BEAA264-0658-412B-BB8F-2B92BED40A45}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BEAA264-0658-412B-BB8F-2B92BED40A45}.Release|Any CPU.Build.0 = Release|Any CPU
+		{983B2549-1DF8-4668-A18C-A9DE218263A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{983B2549-1DF8-4668-A18C-A9DE218263A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{983B2549-1DF8-4668-A18C-A9DE218263A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{983B2549-1DF8-4668-A18C-A9DE218263A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

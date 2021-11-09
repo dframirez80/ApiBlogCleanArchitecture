@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.DomainServices;
 using ApiBlogCA.Helpers;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,23 +21,28 @@ namespace ApiBlogCA.Controllers
     [Route("api/v1/[controller]")]
     [ApiController]
     [Authorize(Roles = Roles.AdminOrUser)]
+    [Produces("application/json")]
     public class CommentsController : ControllerBase
     {
         // GET: api/v1/Comments
         [HttpGet]
-        public async Task<IEnumerable<CommentDto>> GetAsync([FromServices] CommentsHandler handler, CommentDto commentDto) {
-            return await handler.GetCommentsAsync(commentDto);
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CommentDto>>> GetAsync([FromServices] CommentsHandler handler, CommentDto commentDto) {
+            return Ok(await handler.GetCommentsAsync(commentDto));
         }
 
         // GET: api/v1/Comments/5
         [HttpGet("{id}")]
-        public async Task<Comment> GetCommentAsync([FromServices] CommentsHandler handler, int id) {
-            return await handler.GetCommentAsync(id);
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<Comment>> GetCommentAsync([FromServices] CommentsHandler handler, int id) {
+            return Ok(await handler.GetCommentAsync(id));
         }
 
 
         // GET: api/v1/Comments/Reactions
         [HttpGet("Reactions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Reactions>> GetReactionsAsync([FromServices] CommentsHandler handler, int id) {
             var reactions = await handler.GetReactionsAsync(id);
             if (reactions == null)
@@ -46,29 +52,40 @@ namespace ApiBlogCA.Controllers
 
         // POST api/v1/Comments
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> PostAsync([FromServices] CommentsHandler handler, CommentDto commentDto) {
             if (commentDto == null)
                 BadRequest();
             int userId = Authorization.GetTokenId(User);
             if (userId == 0)
                 Unauthorized();
-            var commentId = await handler.CreateCommentAsync(commentDto, userId);
-
+            int commentId = await handler.CreateCommentAsync(commentDto, userId);
+            if (commentId==0)
+                ValidationProblem();
             return Created("GetComment", new { id = commentId });
         }
 
         // PUT: api/v1/Comments/Reactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("Reactions")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> PutReactions([FromServices] CommentsHandler handler, Reactions reactions) {
             if (reactions == null)
                 return BadRequest();
-            await handler.UpdateReactionsAsync(reactions);
+            var resp = await handler.UpdateReactionsAsync(reactions);
+            if (!resp)
+                ValidationProblem();
             return NoContent();
         }
 
         // PUT api/v1/Comments/5
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Put([FromServices] CommentsHandler handler, int id, CommentDto commentDto) {
             if (commentDto  == null)
                 return BadRequest();
@@ -78,7 +95,9 @@ namespace ApiBlogCA.Controllers
                 Unauthorized();
             if (comment.UserId == userId || User.IsInRole(Roles.Admin)){
                 comment.Content = commentDto.Content;
-                await handler.UpdateCommentAsync(comment);
+                var resp = await handler.UpdateCommentAsync(comment);
+                if (!resp) 
+                    ValidationProblem();
                 return NoContent();
             }
             return BadRequest();
@@ -86,6 +105,9 @@ namespace ApiBlogCA.Controllers
 
         // DELETE api/v1/Comments/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> Delete([FromServices] CommentsHandler handler, int id) {
             var comment = await handler.GetCommentAsync(id);
             if (comment == null)

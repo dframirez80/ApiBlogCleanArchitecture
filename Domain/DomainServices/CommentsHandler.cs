@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Constants;
+using Domain.DomainServices.Validators;
 using Domain.Models;
 using Domain.Models.Dtos;
 using Domain.Repository;
@@ -43,6 +44,11 @@ namespace Domain.DomainServices
         }
 
         public async Task<int> CreateCommentAsync(CommentDto commentDto, int userComment) {
+            var validator = new CommentDtoValidator();
+            var validationResult = await validator.ValidateAsync(commentDto);
+            if (!validationResult.IsValid)
+                return 0;
+            
             var comment = _mapper.Map<Comment>(commentDto); 
             comment.Created = DateTime.UtcNow.AddHours(UTC.GmtBuenosAires);
             comment.UserId = userComment;
@@ -51,20 +57,29 @@ namespace Domain.DomainServices
             return comment.CommentId;
         }
 
-        public async Task UpdateReactionsAsync(Reactions reactions) {
-            if (reactions == null)
-                return;
+        public async Task<bool> UpdateReactionsAsync(Reactions reactions) {
+            var validator = new ReactionValidator();
+            var validationResult = await validator.ValidateAsync(reactions);
+            if (!validationResult.IsValid)
+                return false;
             var comment = await _uow.Comments.GetCommentAsync(reactions.Id);
             if (reactions.Likes > 0)
                 comment.Likes++;
             if (reactions.Dislikes > 0)
                 comment.Dislikes++;
             await _uow.CommitAsync();
+            return true;
         }
 
-        public async Task UpdateCommentAsync(Comment comment) {
+        public async Task<bool> UpdateCommentAsync(Comment comment) {
+            var validator = new CommentValidator();
+            var validationResult = await validator.ValidateAsync(comment);
+            if (!validationResult.IsValid)
+                return false;
+
             await _uow.Comments.UpdateCommentAsync(comment);
             await _uow.CommitAsync();
+            return true;
         }
 
         public async Task DeleteCommentAsync(int id) {
