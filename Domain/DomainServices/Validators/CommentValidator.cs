@@ -16,7 +16,7 @@ namespace Domain.DomainServices.Validators
             RuleFor(r => r.Content)
                 .NotNull().WithMessage(PROPERTY_REQUIRED_MESSAGE)
                 .NotEmpty().WithMessage(PROPERTY_REQUIRED_MESSAGE)
-                .MaximumLength(Constraints.MaxLengthContent);
+                .MaximumLength(ModelConstraints.MaxLengthContent);
             RuleFor(r => r.ArticleId)
                 .GreaterThan(Numerical.MinValue)
                 .NotNull().WithMessage(PROPERTY_REQUIRED_MESSAGE)

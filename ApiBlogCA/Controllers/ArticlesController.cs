@@ -70,15 +70,15 @@ namespace ApiBlogCA.Controllers
         }
 
         // GET: api/v1/Articles/Reactions
-        [HttpGet("Reactions")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Reactions>> GetReactionsAsync([FromServices] ArticlesHandler handler, int id) {
-            var reactions = await handler.GetReactionsAsync(id);
-            if (reactions == null)
-                return NotFound();
-            return Ok(reactions);
-        }
+        //[HttpGet("Reactions")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //[ProducesResponseType(StatusCodes.Status404NotFound)]
+        //public async Task<ActionResult<List<ReactionDto>>> GetReactionsAsync([FromServices] ArticlesHandler handler, int id) {
+        //    var reactions = await handler.GetReactionsAsync(id);
+        //    if (reactions == null)
+        //        return NotFound();
+        //    return Ok(reactions);
+        //}
 
         // PUT: api/v1/Articles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -102,15 +102,15 @@ namespace ApiBlogCA.Controllers
 
         // PUT: api/v1/Articles/Reactions
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("Reactions")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> PutReactions([FromServices] ArticlesHandler handler, Reactions reactions) {
-            if (reactions == null)
-                return BadRequest();
-            await handler.UpdateReactions(reactions);
-            return NoContent();
-        }
+        //[HttpPut("Reactions")]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status204NoContent)]
+        //public async Task<IActionResult> PutReactions([FromServices] ArticlesHandler handler, ReactionDto reaction) {
+        //    if (reaction == null)
+        //        return BadRequest();
+        //    await handler.UpdateReaction(reaction);
+        //    return NoContent();
+        //}
 
         // POST: api/v1/Articles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

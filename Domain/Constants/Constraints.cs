@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Constants
 {
-    public class Constraints
+    public class ModelConstraints
     {
         public const int MaxLengthNames = 30;
         public const int MaxLengthSurnames = 30;

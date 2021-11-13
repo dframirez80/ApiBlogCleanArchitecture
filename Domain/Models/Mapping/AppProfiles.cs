@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Domain.Models.Profiles
+namespace Domain.Models.Mapping
 {
     public class AppProfiles : Profile
     {
@@ -14,9 +14,11 @@ namespace Domain.Models.Profiles
             //CreateMap<OriginModel, DestinationModel>();
             CreateMap<ArticleDto, Article>();
             CreateMap<UserDto, User>();
-            CreateMap<CommentDto, Comment>();
-            CreateMap<IEnumerable<Comment>, IEnumerable<CommentDto>>();
+            CreateMap<CommentDto, Comment>().ReverseMap();
 
+            // No es necesario mapear IEnumerable<>, con mapear los elementos es suficiente.
+            // Al existir el mapeo CommentDto => Comment, solo es necesario agregar el ReverseMap(), para tener el mapeo inverso
+            //CreateMap<Comment, CommentDto>(); 
         }
     }
 }
