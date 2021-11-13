@@ -9,10 +9,10 @@ namespace Repository.Repositories.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<User> builder) {
             builder.HasKey(u => u.UserId);
-            builder.Property(u => u.Names).IsRequired().HasMaxLength(Constraints.MaxLengthNames);
-            builder.Property(u => u.Surnames).IsRequired().HasMaxLength(Constraints.MaxLengthSurnames);
-            builder.Property(u => u.Email).IsRequired().HasMaxLength(Constraints.MaxLengthEmails);
-            builder.Property(u => u.Password).IsRequired().HasMaxLength(Constraints.MaxLengthPassword);
+            builder.Property(u => u.Names).IsRequired().HasMaxLength(ModelConstraints.MaxLengthNames);
+            builder.Property(u => u.Surnames).IsRequired().HasMaxLength(ModelConstraints.MaxLengthSurnames);
+            builder.Property(u => u.Email).IsRequired().HasMaxLength(ModelConstraints.MaxLengthEmails);
+            builder.Property(u => u.Password).IsRequired().HasMaxLength(ModelConstraints.MaxLengthPassword);
         }
     }
 }

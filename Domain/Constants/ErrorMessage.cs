@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace Domain.Constants
 {
+    // En la medida que la cantidad de mensajes crece, es imperativo darle una organización como mínimo.
+    // Luego, si existe la posibilidad de multi idioma, se puede implementar un mecanismo de recursos (o satelite assemblies)
     public static class ErrorMessage
     {
         public const string UserId = "Debe ingresar Id de usuario";

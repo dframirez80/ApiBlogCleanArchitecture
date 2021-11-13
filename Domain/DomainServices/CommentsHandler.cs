@@ -37,8 +37,8 @@ namespace Domain.DomainServices
             Reactions reactions = new()
             {
                 Id = comment.CommentId,
-                Likes = comment.Likes,
-                Dislikes = comment.Dislikes
+                //Likes = comment.Likes,
+                //Dislikes = comment.Dislikes
             };
             return reactions;
         }
@@ -63,10 +63,10 @@ namespace Domain.DomainServices
             if (!validationResult.IsValid)
                 return false;
             var comment = await _uow.Comments.GetCommentAsync(reactions.Id);
-            if (reactions.Likes > 0)
-                comment.Likes++;
-            if (reactions.Dislikes > 0)
-                comment.Dislikes++;
+            //if (reactions.Likes > 0)
+            //    comment.Likes++;
+            //if (reactions.Dislikes > 0)
+            //    comment.Dislikes++;
             await _uow.CommitAsync();
             return true;
         }

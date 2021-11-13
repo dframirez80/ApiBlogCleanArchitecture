@@ -16,23 +16,25 @@ namespace Domain.DomainServices
     public class ArticlesHandler
     {
         private readonly IUnitOfWork _uow;
-        private readonly IMapper _mapper;
-        private readonly ITokenJwt _tokenJwt;
+        private readonly IMapper _mapper;        
 
-        public ArticlesHandler(IUnitOfWork uow, IMapper mapper, ITokenJwt tokenJwt) {
+        public ArticlesHandler(IUnitOfWork uow, IMapper mapper) {
             _uow = uow;
-            _mapper = mapper;
-            _tokenJwt = tokenJwt;
+            _mapper = mapper;            
         }
         public async Task<PagingResponse<Article>> GetArticlesByPagingAsync(PagingRequest paging) {
-            if (paging.Quantity < Paging.QuantityMin)
-                paging.Quantity = Paging.QuantityMin;
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
+            //// Esta lógica podría estar dentro del repository, es decir, dentro de _uow.Articles.GetPagingAsync()
+            if (paging.Quantity < PagingRequest.QuantityMin)
+                paging.Quantity = PagingRequest.QuantityMin;
             var count = _uow.Articles.GetCount();
             var totalPages = (int)Math.Floor((decimal)count / paging.Quantity);
             if ((count % paging.Quantity) > 0)
                 totalPages++;
             if (paging.Page > totalPages)
                 paging.Page = 1;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////
             PagingResponse<Article> pagingResponse = new()
             {
                 TotalItems = count,
@@ -51,32 +53,32 @@ namespace Domain.DomainServices
         public async Task<Article> GetArticleAsync(int id) {
             return await _uow.Articles.GetArticleAsync(id);
         }
-        public async Task<Reactions> GetReactionsAsync(int id) {
-            var article = await _uow.Articles.GetArticleAsync(id);
-            if (article == null)
-                return null;
-            Reactions reactions = new()
-            {
-                Id = article.ArticleId,
-                Likes = article.Likes,
-                Dislikes = article.Dislikes
-            };
-            return reactions;
-        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////
+        // Las reacciones ahora deberían tener su propio repo, ya que tiene entidad por si solas.
+        //public async Task<List<ReactionDto>> GetReactionsAsync(int id) {
+        //    //var reactions = await _uow.Articles.GetReactionsAsync(id);
+        //    var reactions = new List<ReactionDto>();
+        //    if (reactions == null)
+        //        return null;            
+        //    return reactions;
+        //}
         public async Task UpdateArticleAsync(Article article) {
             await _uow.Articles.UpdateArticleAsync(article);
             await _uow.CommitAsync();
         }
-        public async Task UpdateReactions(Reactions reactions) {
-            if (reactions == null) return;
-            var article = await _uow.Articles.GetArticleAsync(reactions.Id);
-            if (article == null) return;
-            if (reactions.Likes > 0)
-                article.Likes++;
-            if (reactions.Dislikes > 0)
-                article.Dislikes++;
-            await _uow.CommitAsync();
-        }
+        ////////////////////////////////////////////////////////////////////////////////////////
+        // Las reacciones ahora deberían tener su propio repo, ya que tiene entidad por si solas.
+        //public async Task UpdateReaction(Reaction reaction) {
+        //    //if (reactions == null) return;
+        //    var article = await _uow.Articles.UpdateReactionAsync(reaction.Id);
+        //    if (article == null) return;
+        //    //if (reactions.Likes > 0)
+        //    //    article.Likes++;
+        //    //if (reactions.Dislikes > 0)
+        //    //    article.Dislikes++;
+        //    await _uow.CommitAsync();
+        //}
         public async Task<int> CreateArticleAsync(ArticleDto articleDto, int userId) {
             var article = _mapper.Map<Article>(articleDto);
             article.Created = DateTime.UtcNow.AddHours(UTC.GmtBuenosAires);
