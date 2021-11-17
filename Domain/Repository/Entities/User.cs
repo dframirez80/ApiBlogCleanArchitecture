@@ -17,7 +17,7 @@ namespace Domain.Repository.Entities
         public DateTime Created { get; set; }
         public string Role { get; set; }
         public int StatusUser { get; set; }
-        public ICollection<Article> Articles { get; set; } = new List<Article>();
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+        public ICollection<Article> Articles { get; set; }
+        public ICollection<Comment> Comments { get; set; }
     }
 }

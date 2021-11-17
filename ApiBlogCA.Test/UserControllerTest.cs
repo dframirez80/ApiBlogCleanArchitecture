@@ -12,6 +12,9 @@ using Domain.DomainServices;
 using Domain.Email;
 using Microsoft.AspNetCore.Mvc;
 using Domain.Repository.Entities;
+using Domain.Models.Dtos;
+using Repository.Repositories.EntityDbContext;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace ApiBlogCA.Test
 {
@@ -24,8 +27,15 @@ namespace ApiBlogCA.Test
         IServiceProvider Container { get; set; }
         UsersHandler Handler { get; set; }
         UsersController Controller { get; set; }
-        public UserControllerTest() {
+        AppDbContext Context { get; set; }
+        IDbContextTransaction Transaction { get; set; }
+
+        [SetUp]
+        public void Setup() {
             Container = ContainerFactory.Create();
+            Context = Container.GetService<AppDbContext>();
+
+            Transaction = Context.Database.BeginTransaction();
 
             Uow = Container.GetService<IUnitOfWork>();
             Mapper = Container.GetService<IMapper>();
@@ -34,9 +44,19 @@ namespace ApiBlogCA.Test
             Handler = new UsersHandler(Uow, Mapper, EmailService, TokenJwt);
             Controller = new UsersController();
         }
-        [SetUp]
-        public void Setup() {
+        [TearDown]
+        public void DisposeAll() {
+            Transaction.Rollback();
+            Container = null;
+            Context = null;
+            Uow = null;
+            Mapper = null;
+            TokenJwt = null;
+            EmailService = null;
+            Handler = null;
+            Controller = null;
         }
+
         [Test]
         public void TestUser_ShouldResponseStringNoNullOrEmpty() {
             // arrange
@@ -79,5 +99,16 @@ namespace ApiBlogCA.Test
             Assert.AreEqual(expected, resp.StatusCode);
         }
 
+        [Test]
+        public async Task PostUserAdmin_Should_Return_Status_Created() {
+            // arrange
+            var expected = StatusCodes.Status201Created;
+            UserDto userDto = new() { Names = "dario", Email = "dfr8222@hotmail.com", Surnames = "pep", Password = "Bpca_1234" };
+            // act
+            var result = await Controller.PostUserAdmin(Handler, userDto);
+            var resp = (CreatedResult)result;
+            // assert
+            Assert.AreEqual(expected, resp.StatusCode);
+        }
     }
 }

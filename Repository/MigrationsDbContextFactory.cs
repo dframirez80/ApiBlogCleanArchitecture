@@ -9,7 +9,7 @@ namespace Repository
 {
     public class MigrationsDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        private const string CONNECTION_NAME = "ApiBlogCADB";
+        private const string CONNECTION_NAME = "ApiBlog";
         private const string APPSETTINGS_FILENAME = "appsettings.json";
 
         public AppDbContext CreateDbContext(string[] args)

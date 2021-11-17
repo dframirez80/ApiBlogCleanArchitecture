@@ -15,7 +15,7 @@ namespace Repository
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("ApiBlogCADB")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("ApiBlog")));
             return services;
         }
 

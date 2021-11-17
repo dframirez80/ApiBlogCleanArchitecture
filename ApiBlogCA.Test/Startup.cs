@@ -40,11 +40,12 @@ namespace ApiBlogCA.Test
             IServiceCollection services) {
             var config = host.Configuration;
             //Infrastructure
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IArticleRepository, ArticleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("ApiBlogCADB")));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("ApiBlog")));
             services.Configure<EmailSettings>(config.GetSection("EmailSettings"));
             services.AddTransient<IMailService, MailService>();
 

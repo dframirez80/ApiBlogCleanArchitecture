@@ -11,7 +11,7 @@ namespace Domain.Constants
         public const int MaxLengthNames = 30;
         public const int MaxLengthSurnames = 30;
         public const int MaxLengthEmails = 60;
-        public const int MaxLengthPassword = 30;
+        public const int MaxLengthPassword = 500;
         public const int MaxLengthContent = 500;
         public const int MaxLengthTitle = 30;
         public const int MaxLengthKeyword = 30;
