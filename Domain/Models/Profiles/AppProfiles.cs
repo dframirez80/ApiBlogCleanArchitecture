@@ -14,9 +14,7 @@ namespace Domain.Models.Profiles
             //CreateMap<OriginModel, DestinationModel>();
             CreateMap<ArticleDto, Article>();
             CreateMap<UserDto, User>();
-            CreateMap<CommentDto, Comment>();
-            CreateMap<IEnumerable<Comment>, IEnumerable<CommentDto>>();
-
+            CreateMap<CommentDto, Comment>().ReverseMap();
         }
     }
 }

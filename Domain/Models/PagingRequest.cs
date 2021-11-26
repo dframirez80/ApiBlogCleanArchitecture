@@ -3,7 +3,7 @@ namespace Domain.Models
 {
     public class PagingRequest
     {
-        public int Page { get; set; } = 1;
-        public int Quantity { get; set; } = 1;
+        public int Page { get; set; } = Constants.Paging.DefaultPaging;
+        public int Quantity { get; set; } = Constants.Paging.DefaultQuantity;
     }
 }

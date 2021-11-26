@@ -56,10 +56,12 @@ namespace ApiBlogCA.Startups
 
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
-                    Description = "JWT token",
+                    Description = "JWT token \r\n Ingrese 'Bearer' [space] y luego el token.\r\n\r\nEjemplo: \"Bearer 12345abcdef\"",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
                     Type = SecuritySchemeType.ApiKey,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement {
@@ -68,10 +70,9 @@ namespace ApiBlogCA.Startups
                                 Reference = new OpenApiReference {
                                     Id = "Bearer",
                                     Type = ReferenceType.SecurityScheme
-                                },
-                                UnresolvedReference = true
+                                }
                         },
-                        new List<string>()
+                        new string[] {}
                     }
                 });
             });

@@ -6,6 +6,7 @@ namespace Domain.Models
     {
         public int TotalItems { get; set; }
         public int CurrentPage { get; set; }
+        public bool NextPage { get; set; }
         public IEnumerable<T> ListItems { get; set; }
     }
 }

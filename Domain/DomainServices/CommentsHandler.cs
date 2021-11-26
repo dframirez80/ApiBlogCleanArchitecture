@@ -23,7 +23,7 @@ namespace Domain.DomainServices
         }
         public async Task<IEnumerable<CommentDto>> GetCommentsAsync(CommentDto commentDto) {
             var comments = await _uow.Comments.GetCommentsAsync(commentDto.ArticleId);
-            return _mapper.Map<IEnumerable<CommentDto>>(comments);
+            return _mapper.Map<List<CommentDto>>(comments);
         }
 
         public async Task<Comment> GetCommentAsync(int id) {

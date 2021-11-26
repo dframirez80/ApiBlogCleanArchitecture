@@ -29,14 +29,21 @@ namespace Domain.DomainServices
                 paging.Quantity = Paging.QuantityMin;
             var count = _uow.Articles.GetCount();
             var totalPages = (int)Math.Floor((decimal)count / paging.Quantity);
+            var nextPage = false;
             if ((count % paging.Quantity) > 0)
                 totalPages++;
             if (paging.Page > totalPages)
                 paging.Page = 1;
+
+            if (paging.Page < totalPages)
+                nextPage = true;
+             else
+                nextPage = false;
             PagingResponse<Article> pagingResponse = new()
             {
                 TotalItems = count,
                 CurrentPage = paging.Page,
+                NextPage = nextPage,
                 ListItems = await _uow.Articles.GetPagingAsync(paging.Page, paging.Quantity)
             };
             return pagingResponse;
