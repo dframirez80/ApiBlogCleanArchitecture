@@ -10,6 +10,5 @@ namespace Domain.Constants
         public const int QuantityMin = 1;
         public const int DefaultQuantity = 1;
         public const int DefaultPaging = 1;
-
     }
 }
